@@ -13,4 +13,11 @@ class AcademicYear extends Model
     const STATUS_ENROLLMENT = 'enrollment';
     const STATUS_STARTED = 'started';
     const STATUS_ENDED = 'ended';
+
+    public static function getActiveAcademicYear($department)
+    {
+        return AcademicYear::where('department', $department)
+            ->where('status', '!=', self::STATUS_ENDED)
+            ->first();
+    }
 }

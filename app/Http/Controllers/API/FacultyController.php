@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Faculty;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -10,7 +11,23 @@ class FacultyController extends Controller
 {
     public function index()
     {
-        return User::where('role', User::ROLE_FACULTY)->get();
+        return Faculty::all();
+    }
+
+    public function show(Faculty $faculty)
+    {
+        return $faculty->load('subjects.gradeLevel');
+    }
+
+    public function addSubject(Faculty $faculty, Request $request)
+    {
+        $this->validate($request, [
+            'subject_id' => 'required|exists:subjects,id'
+        ]);
+
+        $faculty->subjects()->syncWithoutDetaching([$request->subject_id]);
+
+        return $faculty->subjects()->get()->load('gradeLevel');
     }
 
     public function create(Request $request)
@@ -23,7 +40,7 @@ class FacultyController extends Controller
             'department' => 'required'
         ]);
 
-        return User::create($request->only(
+        return Faculty::create($request->only(
             'firstname',
             'middlename',
             'lastname',

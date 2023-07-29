@@ -49,6 +49,8 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::prefix('/faculties')->controller(FacultyController::class)->group(function () {
         Route::get('/', 'index');
         Route::post('/', 'create');
+        Route::get('/{faculty}', 'show');
+        Route::post('/{faculty}/subjects', 'addSubject');
     });
 
     Route::prefix('/subjects')->controller(SubjectController::class)->group(function () {
@@ -58,10 +60,14 @@ Route::middleware('auth:sanctum')->group(function() {
 
     Route::prefix('/grade-levels')->controller(GradeLevelController::class)->group(function () {
         Route::get('/', 'index');
+        Route::get('/{level}', 'show');
+        Route::post('/{level}/subjects', 'addSubject');
+        Route::post('/{level}/fees', 'addFee');
     });
 
     Route::prefix('/academic-years')->controller(AcademicYearController::class)->group(function(){
         Route::get('/', 'index');
         Route::post('/', 'create');
+        Route::get('/active', 'activeAcademicYear')->withoutMiddleware('auth:sanctum');
     });
 });
