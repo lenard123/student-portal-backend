@@ -1,9 +1,12 @@
 <?php
 
+use App\Http\Controllers\API\AcademicYearController;
 use App\Http\Controllers\API\AnnouncementController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\FacultyController;
+use App\Http\Controllers\API\GradeLevelController;
 use App\Http\Controllers\API\MessageThreadController;
+use App\Http\Controllers\API\SubjectController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -44,6 +47,20 @@ Route::middleware('auth:sanctum')->group(function() {
     });
 
     Route::prefix('/faculties')->controller(FacultyController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::post('/', 'create');
+    });
+
+    Route::prefix('/subjects')->controller(SubjectController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::post('/', 'create');
+    });
+
+    Route::prefix('/grade-levels')->controller(GradeLevelController::class)->group(function () {
+        Route::get('/', 'index');
+    });
+
+    Route::prefix('/academic-years')->controller(AcademicYearController::class)->group(function(){
         Route::get('/', 'index');
         Route::post('/', 'create');
     });
