@@ -6,6 +6,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\FacultyController;
 use App\Http\Controllers\API\GradeLevelController;
 use App\Http\Controllers\API\MessageThreadController;
+use App\Http\Controllers\API\SectionsController;
 use App\Http\Controllers\API\SubjectController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -69,5 +70,12 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::get('/', 'index');
         Route::post('/', 'create');
         Route::get('/active', 'activeAcademicYear')->withoutMiddleware('auth:sanctum');
+        Route::get('/{school_year}/sections', 'sections');
+        Route::post('/{school_year}/sections', 'createSection');
+    });
+
+    Route::prefix('/sections')->controller(SectionsController::class)->group(function () {
+        Route::get('/{section}', 'show');
+        Route::post('/{section}/subjects', 'addSubject');
     });
 });

@@ -14,6 +14,22 @@ class AcademicYearController extends Controller
         return AcademicYear::all();
     }
 
+    public function sections(AcademicYear $school_year)
+    {
+        return $school_year->sections()->with('gradeLevel')->orderBy('grade_level_id')->get();
+    }
+
+    public function createSection(AcademicYear $school_year, Request $request)
+    {
+        $this->validate($request, [
+            'grade_level_id' => 'required|exists:grade_levels,id',
+            'name' => 'required'
+        ]);
+
+        $section = $school_year->sections()->create($request->only('grade_level_id', 'name'));
+        return $section->load('gradeLevel');
+    }
+
     public function create(Request $request)
     {
         $this->validate($request, [

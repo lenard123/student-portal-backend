@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Subject extends Model
+class Section extends Model
 {
     use HasFactory;
 
@@ -14,8 +14,8 @@ class Subject extends Model
         return $this->belongsTo(GradeLevel::class);
     }
 
-    public function faculties()
+    public function schedules()
     {
-        return $this->belongsToMany(Faculty::class);
+        return $this->hasMany(Schedule::class);
     }
 }

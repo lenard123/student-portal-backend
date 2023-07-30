@@ -14,6 +14,11 @@ class AcademicYear extends Model
     const STATUS_STARTED = 'started';
     const STATUS_ENDED = 'ended';
 
+    public function sections()
+    {
+        return $this->hasMany(Section::class);
+    }
+
     public static function getActiveAcademicYear($department)
     {
         return AcademicYear::where('department', $department)
