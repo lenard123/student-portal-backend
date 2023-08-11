@@ -45,6 +45,7 @@ class AuthController extends Controller
         // Auth::login($user);
         if ($user->role == User::ROLE_STUDENT) {
             Auth::guard('web:student')->login($user);
+            return Auth::guard('web:student')->user();
         } else {
             Auth::login($user);
         }

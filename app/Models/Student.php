@@ -16,6 +16,8 @@ class Student extends User
         'role' => self::ROLE_STUDENT,
     ];
 
+    protected $with = ['currentRegistration'];
+
     public function hasPendingRegistration()
     {
         return $this->pendingRegistration()->exists();

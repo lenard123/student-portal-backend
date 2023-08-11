@@ -8,6 +8,7 @@ use App\Http\Controllers\API\FacultyController;
 use App\Http\Controllers\API\GradeLevelController;
 use App\Http\Controllers\API\MessageThreadController;
 use App\Http\Controllers\API\SectionsController;
+use App\Http\Controllers\API\StudentController;
 use App\Http\Controllers\API\StudentRegistrationController;
 use App\Http\Controllers\API\SubjectController;
 use Illuminate\Support\Facades\Route;
@@ -40,8 +41,10 @@ Route::post('/students/register', [StudentRegistrationController::class, 'regist
 
 Route::middleware('auth:sanctum')->group(function() {
 
+    Route::get('/student/subjects', [StudentController::class, 'subjects']);
     Route::post('/enrollment', [StudentRegistrationController::class, 'enroll']);
     Route::get('/enrollment/{enrollee}', [EnrolleeController::class, 'show']);
+    Route::patch('/enrollment/{enrollee}/enroll', [EnrolleeController::class, 'enroll']);
 
     Route::prefix('/announcements')->controller(AnnouncementController::class)->group(function() {
         Route::get('/', 'index');

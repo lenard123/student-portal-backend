@@ -9,6 +9,8 @@ class GradeLevel extends Model
 {
     use HasFactory;
 
+    private ?AcademicYear $academic_year = null;
+
     public function subjects()
     {
         $active_id = $this->academicYear()->id;
@@ -23,9 +25,19 @@ class GradeLevel extends Model
             ->where('academic_year_id', $active_id);
     }
 
+    public function sections()
+    {
+        $active_id = $this->academicYear()->id;
+        return $this->hasMany(Section::class)
+            ->where('academic_year_id', $active_id);
+    }
+
     public function academicYear()
     {
-        return AcademicYear::getActiveAcademicYear($this->department);
+        if ($this->academic_year == null) {
+            $this->academic_year = AcademicYear::getActiveAcademicYear($this->department);
+        }
+        return $this->academic_year;
     }
 
 }

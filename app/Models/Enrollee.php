@@ -32,4 +32,9 @@ class Enrollee extends Model
     {
         return $this->belongsTo(GradeLevel::class);
     }
+
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class, 'section_id', 'section_id');
+    }
 }
