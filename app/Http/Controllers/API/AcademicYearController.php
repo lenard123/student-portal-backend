@@ -40,6 +40,11 @@ class AcademicYearController extends Controller
         return AcademicYear::create($request->only('department', 'name'));
     }
 
+    public function enrollees(AcademicYear $school_year)
+    {
+        return $school_year->enrollees->load('student', 'gradeLevel', 'section');
+    }
+
     public function activeAcademicYear()
     {
         return [

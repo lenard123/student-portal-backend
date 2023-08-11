@@ -19,6 +19,11 @@ class AcademicYear extends Model
         return $this->hasMany(Section::class);
     }
 
+    public function enrollees()
+    {
+        return $this->hasMany(Enrollee::class);
+    }
+
     public static function getActiveAcademicYear($department)
     {
         return AcademicYear::where('department', $department)

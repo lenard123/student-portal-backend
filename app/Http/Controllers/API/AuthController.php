@@ -15,6 +15,11 @@ class AuthController extends Controller
         return auth()->user();
     }
 
+    public function currentStudent()
+    {
+        return Auth::guard('web:student')->user();
+    }
+
     public function login(Request $request)
     {
         $this->validate($request, [
@@ -37,7 +42,12 @@ class AuthController extends Controller
             abort(422, "Wrong email or password");
         }
 
-        Auth::login($user);
+        // Auth::login($user);
+        if ($user->role == User::ROLE_STUDENT) {
+            Auth::guard('web:student')->login($user);
+        } else {
+            Auth::login($user);
+        }
 
         return $user;
     }
@@ -45,6 +55,12 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
+        return response()->noContent();
+    }
+
+    public function logoutStudent()
+    {
+        Auth::guard('web:student')->logout();
         return response()->noContent();
     }
 }

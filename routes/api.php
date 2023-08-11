@@ -3,12 +3,13 @@
 use App\Http\Controllers\API\AcademicYearController;
 use App\Http\Controllers\API\AnnouncementController;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\EnrolleeController;
 use App\Http\Controllers\API\FacultyController;
 use App\Http\Controllers\API\GradeLevelController;
 use App\Http\Controllers\API\MessageThreadController;
 use App\Http\Controllers\API\SectionsController;
+use App\Http\Controllers\API\StudentRegistrationController;
 use App\Http\Controllers\API\SubjectController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,9 +31,17 @@ Route::controller(AuthController::class)->group(function() {
     Route::post('/login', 'login');
     Route::post('/logout', 'logout');
     Route::get('/user', 'currentUser')->middleware('auth:sanctum');
+    Route::get('/student', 'currentStudent')->middleware('auth:sanctum');
+    Route::post('/student-logout', 'logoutStudent')->middleware('auth:sanctum');
 });
 
+Route::post('/students/send-otp', [StudentRegistrationController::class, 'sendOtp']);
+Route::post('/students/register', [StudentRegistrationController::class, 'register']);
+
 Route::middleware('auth:sanctum')->group(function() {
+
+    Route::post('/enrollment', [StudentRegistrationController::class, 'enroll']);
+    Route::get('/enrollment/{enrollee}', [EnrolleeController::class, 'show']);
 
     Route::prefix('/announcements')->controller(AnnouncementController::class)->group(function() {
         Route::get('/', 'index');
@@ -72,6 +81,7 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::get('/active', 'activeAcademicYear')->withoutMiddleware('auth:sanctum');
         Route::get('/{school_year}/sections', 'sections');
         Route::post('/{school_year}/sections', 'createSection');
+        Route::get('/{school_year}/enrollees', 'enrollees');
     });
 
     Route::prefix('/sections')->controller(SectionsController::class)->group(function () {
