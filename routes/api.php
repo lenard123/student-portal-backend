@@ -7,6 +7,7 @@ use App\Http\Controllers\API\EnrolleeController;
 use App\Http\Controllers\API\FacultyController;
 use App\Http\Controllers\API\GradeLevelController;
 use App\Http\Controllers\API\MessageThreadController;
+use App\Http\Controllers\API\ScheduleController;
 use App\Http\Controllers\API\SectionsController;
 use App\Http\Controllers\API\StudentController;
 use App\Http\Controllers\API\StudentRegistrationController;
@@ -28,7 +29,7 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::controller(AuthController::class)->group(function() {
+Route::controller(AuthController::class)->group(function () {
     Route::post('/login', 'login');
     Route::post('/logout', 'logout');
     Route::get('/user', 'currentUser')->middleware('auth:sanctum');
@@ -39,21 +40,21 @@ Route::controller(AuthController::class)->group(function() {
 Route::post('/students/send-otp', [StudentRegistrationController::class, 'sendOtp']);
 Route::post('/students/register', [StudentRegistrationController::class, 'register']);
 
-Route::middleware('auth:sanctum')->group(function() {
+Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/student/subjects', [StudentController::class, 'subjects']);
     Route::post('/enrollment', [StudentRegistrationController::class, 'enroll']);
     Route::get('/enrollment/{enrollee}', [EnrolleeController::class, 'show']);
     Route::patch('/enrollment/{enrollee}/enroll', [EnrolleeController::class, 'enroll']);
 
-    Route::prefix('/announcements')->controller(AnnouncementController::class)->group(function() {
+    Route::prefix('/announcements')->controller(AnnouncementController::class)->group(function () {
         Route::get('/', 'index');
         Route::post('/', 'create');
         Route::put('/{announcement}', 'update');
         Route::delete('/{announcement}', 'destroy');
     });
 
-    Route::prefix('/threads')->controller(MessageThreadController::class)->group(function() {
+    Route::prefix('/threads')->controller(MessageThreadController::class)->group(function () {
         Route::get('/', 'index');
         Route::get('/{thread}/messages', 'messages');
         Route::post('/{thread}/messages', 'sendMessage');
@@ -78,7 +79,7 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::post('/{level}/fees', 'addFee');
     });
 
-    Route::prefix('/academic-years')->controller(AcademicYearController::class)->group(function(){
+    Route::prefix('/academic-years')->controller(AcademicYearController::class)->group(function () {
         Route::get('/', 'index');
         Route::post('/', 'create');
         Route::get('/active', 'activeAcademicYear')->withoutMiddleware('auth:sanctum');
@@ -91,4 +92,6 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::get('/{section}', 'show');
         Route::post('/{section}/subjects', 'addSubject');
     });
+
+    Route::get('/schedules/{schedule}', [ScheduleController::class, 'show']);
 });
