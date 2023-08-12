@@ -27,11 +27,11 @@ class AppServiceProvider extends ServiceProvider
         Model::unguard();
 
         Request::macro('role', function ($role) {
-            return $this->header('user_role') == $role;
+            return $this->header('user-role') == $role;
         });
 
         Request::macro('currentUser', function () {
-            $role = $this->header('user_role');
+            $role = $this->header('user-role');
             return Auth::guard("web:$role")->user();
         });
     }

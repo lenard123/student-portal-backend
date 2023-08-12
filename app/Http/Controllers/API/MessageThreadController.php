@@ -11,7 +11,7 @@ class MessageThreadController extends Controller
 {
     public function index(Request $request)
     {
-        switch ($request->header('user_role')) {
+        switch ($request->header('user-role')) {
             case User::ROLE_ADMIN:
                 return MessageThread::with('members')
                     ->withCount('messages')
