@@ -30,4 +30,9 @@ class Schedule extends Model
     {
         return $this->hasMany(Post::class)->latest();
     }
+
+    public function lessons()
+    {
+        return $this->hasMany(Lesson::class)->latest();
+    }
 }

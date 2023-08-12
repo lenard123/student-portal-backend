@@ -4,10 +4,12 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\AcademicYear;
+use App\Models\Media;
 use App\Models\Post;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ScheduleController extends Controller
 {
@@ -21,6 +23,11 @@ class ScheduleController extends Controller
         return $schedule->posts;
     }
 
+    public function lessons(Schedule $schedule)
+    {
+        return $schedule->lessons;
+    }
+
     public function createPost(Schedule $schedule, Request $request)
     {
         $this->validate($request, [
@@ -30,6 +37,32 @@ class ScheduleController extends Controller
         $request->merge(['author_id' => $request->currentUser()->id]);
 
         return $schedule->posts()->create($request->only('description', 'author_id'));
+    }
+
+    public function createLesson(Schedule $schedule, Request $request)
+    {
+        $this->validate($request, [
+            'title' => 'required',
+            'description' => 'required',
+            'files' => 'array',
+            'files.*' => 'file'
+        ]);
+
+        return DB::transaction(function () use ($schedule, $request) {
+
+
+            $lesson = $schedule->lessons()->create(
+                $request->merge(['author_id' => $request->currentUser()->id])
+                    ->only('title', 'description', 'author_id')
+            );
+
+            foreach ($request->file('files') as $file) {
+                Media::upload($lesson, $file, "lessons", "local");
+            }
+
+
+            return $lesson;
+        });
     }
 
     public function index(Request $request)

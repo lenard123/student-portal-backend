@@ -96,5 +96,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/schedules/{schedule}', [ScheduleController::class, 'show']);
     Route::get('/schedules/{schedule}/posts', [ScheduleController::class, 'posts']);
     Route::post('/schedules/{schedule}/posts', [ScheduleController::class, 'createPost']);
+    Route::get('/schedules/{schedule}/lessons', [ScheduleController::class, 'lessons']);
+    Route::post('/schedules/{schedule}/lessons', [ScheduleController::class, 'createLesson']);
     Route::get('/schedules', [ScheduleController::class, 'index']);
 });
