@@ -23,4 +23,12 @@ class Faculty extends User
     {
         return $this->belongsToMany(Subject::class);
     }
+
+    public function schedules($academic_year_id)
+    {
+        return $this->hasMany(Schedule::class)
+            ->whereHas('section', function (Builder $q) use ($academic_year_id) {
+                $q->where('academic_year_id', $academic_year_id);
+            });
+    }
 }

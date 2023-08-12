@@ -10,9 +10,15 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function currentUser()
+    public function currentUser($role)
     {
-        return auth()->user();
+        $auth = Auth::guard("web:$role");
+
+        if (!$auth->check()) {
+            abort(401, "You need to login first");
+        }
+
+        return $auth->user();
     }
 
     public function currentStudent()
@@ -25,37 +31,25 @@ class AuthController extends Controller
         $this->validate($request, [
             'email' => 'required|email',
             'password' => 'required',
+            'role' => 'required',
+        ]);
+
+        $auth = Auth::guard("web:$request->role");
+        $credentials = $request->only('email', 'password', 'role');
+        if (!$auth->attempt($credentials)) {
+            abort(422, "Sorry, wrong email or password.");
+        }
+
+        return $auth->user();
+    }
+
+    public function logout(Request $request)
+    {
+        $this->validate($request, [
             'role' => 'required'
         ]);
 
-        $user = User::where('email', $request->email)->first();
-
-        if (!$user) {
-            abort(422, "Sorry we can't find your email on our database.");
-        }
-
-        if ($user->role !== $request->role) {
-            abort(422, "Your account is not registered on this user role");
-        }
-
-        if (!Hash::check($request->password, $user->password)) {
-            abort(422, "Wrong email or password");
-        }
-
-        // Auth::login($user);
-        if ($user->role == User::ROLE_STUDENT) {
-            Auth::guard('web:student')->login($user);
-            return Auth::guard('web:student')->user();
-        } else {
-            Auth::login($user);
-        }
-
-        return $user;
-    }
-
-    public function logout()
-    {
-        Auth::logout();
+        Auth::guard("web:$request->role")->logout();
         return response()->noContent();
     }
 

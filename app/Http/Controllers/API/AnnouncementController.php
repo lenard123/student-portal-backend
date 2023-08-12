@@ -21,7 +21,7 @@ class AnnouncementController extends Controller
         ]);
 
         return Announcement::create($request->only('title', 'content') + [
-            'user_id' => auth()->id()
+            'user_id' => auth('web:admin')->id()
         ]);
     }
 

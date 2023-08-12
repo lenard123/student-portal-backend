@@ -9,10 +9,9 @@ use Illuminate\Http\Request;
 
 class MessageThreadController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        switch(auth()->user()->role)
-        {
+        switch ($request->header('user_role')) {
             case User::ROLE_ADMIN:
                 return MessageThread::with('members')
                     ->withCount('messages')
@@ -31,7 +30,7 @@ class MessageThreadController extends Controller
             'message' => 'required'
         ]);
         return $thread->messages()->create(
-            $request->only('message') + ['user_id' => auth()->id()]
+            $request->only('message') + ['user_id' => $request->currentUser()->id]
         );
     }
 }
