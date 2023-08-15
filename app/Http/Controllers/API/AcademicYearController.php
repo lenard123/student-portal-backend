@@ -37,6 +37,12 @@ class AcademicYearController extends Controller
             'name' => 'required'
         ]);
 
+        $active = AcademicYear::getActiveAcademicYear($request->department);
+
+        if ($active !== null) {
+            abort(400, "You can't create a school year yet in this department");
+        }
+
         return AcademicYear::create($request->only('department', 'name'));
     }
 

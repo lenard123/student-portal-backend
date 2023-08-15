@@ -6,6 +6,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\EnrolleeController;
 use App\Http\Controllers\API\FacultyController;
 use App\Http\Controllers\API\GradeLevelController;
+use App\Http\Controllers\API\LessonController;
 use App\Http\Controllers\API\MessageThreadController;
 use App\Http\Controllers\API\ScheduleController;
 use App\Http\Controllers\API\SectionsController;
@@ -99,4 +100,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/schedules/{schedule}/lessons', [ScheduleController::class, 'lessons']);
     Route::post('/schedules/{schedule}/lessons', [ScheduleController::class, 'createLesson']);
     Route::get('/schedules', [ScheduleController::class, 'index']);
+
+    Route::get('/lessons/{lesson}', [LessonController::class, 'show']);
 });
