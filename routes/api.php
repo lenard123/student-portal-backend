@@ -103,3 +103,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/lessons/{lesson}', [LessonController::class, 'show']);
 });
+
+Route::get('/enrollment/id/download', [StudentRegistrationController::class, 'downloadRegistrationForm']);
+Route::view('/test', 'pdf.registration-form');
