@@ -13,6 +13,13 @@ class Enrollee extends Model
     const STATUS_CANCELLED = 'cancelled';
     const STATUS_ENROLLED = 'enrolled';
 
+    protected static function booted()
+    {
+        static::creating(function (Enrollee $enrollee) {
+            $enrollee->transaction_id = 'TRN' . time();
+        });
+    }
+
     public function academicYear()
     {
         return $this->belongsTo(AcademicYear::class);

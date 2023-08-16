@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AcademicYear extends Model
 {
@@ -14,7 +15,7 @@ class AcademicYear extends Model
     const STATUS_STARTED = 'started';
     const STATUS_ENDED = 'ended';
 
-    public function sections()
+    public function sections(): HasMany
     {
         return $this->hasMany(Section::class);
     }
@@ -22,6 +23,11 @@ class AcademicYear extends Model
     public function enrollees()
     {
         return $this->hasMany(Enrollee::class);
+    }
+
+    public function gradeLevels(): HasMany
+    {
+        return $this->hasMany(GradeLevel::class, 'department', 'department');
     }
 
     public static function getActiveAcademicYear($department)

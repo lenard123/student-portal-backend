@@ -45,6 +45,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/student/subjects', [StudentController::class, 'subjects']);
     Route::post('/enrollment', [StudentRegistrationController::class, 'enroll']);
+    Route::get('/enrollment', [EnrolleeController::class, 'index']);
     Route::get('/enrollment/{enrollee}', [EnrolleeController::class, 'show']);
     Route::patch('/enrollment/{enrollee}/enroll', [EnrolleeController::class, 'enroll']);
 
@@ -87,6 +88,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{school_year}/sections', 'sections');
         Route::post('/{school_year}/sections', 'createSection');
         Route::get('/{school_year}/enrollees', 'enrollees');
+        Route::patch('/{school_year}/start-enrollment', 'startEnrollment');
     });
 
     Route::prefix('/sections')->controller(SectionsController::class)->group(function () {

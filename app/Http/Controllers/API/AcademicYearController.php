@@ -46,6 +46,25 @@ class AcademicYearController extends Controller
         return AcademicYear::create($request->only('department', 'name'));
     }
 
+    public function startEnrollment(AcademicYear $school_year)
+    {
+        if ($school_year->status != AcademicYear::STATUS_PREPARATION) {
+            abort(400, "This is not a pending academic year.");
+        }
+
+        foreach ($school_year->gradeLevels as $gradeLevel) {
+            if (!$gradeLevel->sections($school_year->id)->exists()) {
+                abort(400, "There is still no section in {$gradeLevel->name}");
+            }
+        }
+
+        $school_year->update([
+            'status' => AcademicYear::STATUS_ENROLLMENT
+        ]);
+
+        return $school_year;
+    }
+
     public function enrollees(AcademicYear $school_year)
     {
         return $school_year->enrollees->load('student', 'gradeLevel', 'section');

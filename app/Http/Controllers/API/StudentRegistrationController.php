@@ -8,12 +8,13 @@ use App\Models\Enrollee;
 use App\Models\GradeLevel;
 use App\Models\Student;
 use App\Models\User;
+use App\Services\SendEmailOtp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class StudentRegistrationController extends Controller
 {
-    public function sendOtp(Request $request)
+    public function sendOtp(Request $request, SendEmailOtp $otpMailer)
     {
         $this->validate($request, [
             'firstname' => 'required',
@@ -23,10 +24,12 @@ class StudentRegistrationController extends Controller
             'password' => 'required|min:8|confirmed'
         ]);
 
+        $otpMailer->send($request->email);
+
         return response()->noContent();
     }
 
-    public function register(Request $request)
+    public function register(Request $request, SendEmailOtp $otpMailer)
     {
         $this->validate($request, [
             'firstname' => 'required',
@@ -34,8 +37,13 @@ class StudentRegistrationController extends Controller
             'email' => 'required|email|unique:users',
             'contact_number' => 'required',
             'password' => 'required|min:8|confirmed',
-            'department' => 'required'
+            'department' => 'required',
+            'code' => 'required|size:6'
         ]);
+
+        if (!$otpMailer->verify($request->email, $request->code)) {
+            abort(400, "Wrong verification code");
+        }
 
         return Student::create($request->only('firstname', 'lastname', 'email', 'password', 'department'));
     }

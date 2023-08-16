@@ -20,6 +20,11 @@ class EnrolleeController extends Controller
         return $enrollee;
     }
 
+    public function index(Request $request)
+    {
+        return $request->currentUser()->registration->load('gradeLevel:id,name');
+    }
+
     /**
      * Registration status must be pending
      * Students must not be enrolled yet
