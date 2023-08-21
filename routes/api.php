@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AcademicYearController;
 use App\Http\Controllers\API\AnnouncementController;
+use App\Http\Controllers\API\AssignmentController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\EnrolleeController;
 use App\Http\Controllers\API\FacultyController;
@@ -100,8 +101,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/schedules/{schedule}/posts', [ScheduleController::class, 'posts']);
     Route::post('/schedules/{schedule}/posts', [ScheduleController::class, 'createPost']);
     Route::get('/schedules/{schedule}/lessons', [ScheduleController::class, 'lessons']);
+    Route::get('/schedules/{schedule}/assignments', [ScheduleController::class, 'assignments']);
     Route::post('/schedules/{schedule}/lessons', [ScheduleController::class, 'createLesson']);
+    Route::post('/schedules/{schedule}/assignments', [ScheduleController::class, 'createAssignment']);
     Route::get('/schedules', [ScheduleController::class, 'index']);
 
     Route::get('/lessons/{lesson}', [LessonController::class, 'show']);
+    Route::get('/assignments/{assignment}', [AssignmentController::class, 'show']);
 });

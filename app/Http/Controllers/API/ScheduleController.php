@@ -28,6 +28,11 @@ class ScheduleController extends Controller
         return $schedule->lessons;
     }
 
+    public function assignments(Schedule $schedule)
+    {
+        return $schedule->assignments;
+    }
+
     public function createPost(Schedule $schedule, Request $request)
     {
         $this->validate($request, [
@@ -37,6 +42,30 @@ class ScheduleController extends Controller
         $request->merge(['author_id' => $request->currentUser()->id]);
 
         return $schedule->posts()->create($request->only('description', 'author_id'));
+    }
+
+    public function createAssignment(Schedule $schedule, Request $request)
+    {
+        $this->validate($request, [
+            'title' => 'required',
+            'description' => 'required',
+            'deadline' => 'nullable|date',
+            'files' => 'array',
+            'files.*' => 'file'
+        ]);
+
+        return DB::transaction(function () use ($schedule, $request) {
+            $assignment = $schedule->assignments()->create(
+                $request->merge(['author_id' => $request->currentUser()->id])
+                    ->only('title', 'description', 'deadline', 'author_id')
+            );
+
+            foreach ($request->file('files') ?? [] as $file) {
+                Media::upload($assignment, $file, "assignments", "local");
+            }
+
+            return $assignment;
+        });
     }
 
     public function createLesson(Schedule $schedule, Request $request)
@@ -56,7 +85,7 @@ class ScheduleController extends Controller
                     ->only('title', 'description', 'author_id')
             );
 
-            foreach ($request->file('files') as $file) {
+            foreach ($request->file('files') ?? [] as $file) {
                 Media::upload($lesson, $file, "lessons", "local");
             }
 
