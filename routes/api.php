@@ -113,3 +113,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/assignments/{assignment}/submit-work', [AssignmentController::class, 'submitAssignment']);
     Route::post('/assignments/{assignment}/grade-work', [AssignmentController::class, 'gradeWork']);
 });
+
+Route::get('/enrollment/id/download', [StudentRegistrationController::class, 'downloadRegistrationForm']);
+Route::view('/test', 'pdf.registration-form');

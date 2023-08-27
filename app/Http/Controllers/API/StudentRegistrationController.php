@@ -9,6 +9,7 @@ use App\Models\GradeLevel;
 use App\Models\Student;
 use App\Models\User;
 use App\Services\SendEmailOtp;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -46,6 +47,11 @@ class StudentRegistrationController extends Controller
         }
 
         return Student::create($request->only('firstname', 'lastname', 'email', 'password', 'department'));
+    }
+
+    public function downloadRegistrationForm()
+    {
+        return Pdf::loadView('pdf.registration-form')->stream();
     }
 
     /**
