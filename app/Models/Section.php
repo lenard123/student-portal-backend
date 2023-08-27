@@ -18,4 +18,9 @@ class Section extends Model
     {
         return $this->hasMany(Schedule::class);
     }
+
+    public function students()
+    {
+        return $this->hasManyThrough(Student::class, Enrollee::class, 'section_id', 'id', 'id', 'student_id');
+    }
 }

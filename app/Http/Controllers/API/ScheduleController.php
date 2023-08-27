@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\AcademicYear;
+use App\Models\AssignmentSubmission;
 use App\Models\Media;
 use App\Models\Post;
 use App\Models\Schedule;
@@ -15,7 +16,7 @@ class ScheduleController extends Controller
 {
     public function show(Schedule $schedule)
     {
-        return $schedule->load('faculty', 'section.gradeLevel', 'subject');
+        return $schedule->load('faculty', 'section.gradeLevel', 'section.students', 'subject');
     }
 
     public function posts(Schedule $schedule)
@@ -93,6 +94,15 @@ class ScheduleController extends Controller
             return $lesson;
         });
     }
+
+    public function submittedASsignments($assignment, Request $request)
+    {
+        return AssignmentSubmission::query()
+            ->where('student_id', $request->currentUser()->id)
+            ->get();
+    }
+
+
 
     public function index(Request $request)
     {

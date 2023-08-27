@@ -104,8 +104,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/schedules/{schedule}/assignments', [ScheduleController::class, 'assignments']);
     Route::post('/schedules/{schedule}/lessons', [ScheduleController::class, 'createLesson']);
     Route::post('/schedules/{schedule}/assignments', [ScheduleController::class, 'createAssignment']);
+    Route::get("/schedules/{schedule}/submitted-assignments", [ScheduleController::class, "submittedAssignments"]);
     Route::get('/schedules', [ScheduleController::class, 'index']);
 
     Route::get('/lessons/{lesson}', [LessonController::class, 'show']);
     Route::get('/assignments/{assignment}', [AssignmentController::class, 'show']);
+    Route::post('/assignments/{assignment}/attach-file', [AssignmentController::class, 'attachFile']);
+    Route::post('/assignments/{assignment}/submit-work', [AssignmentController::class, 'submitAssignment']);
+    Route::post('/assignments/{assignment}/grade-work', [AssignmentController::class, 'gradeWork']);
 });
