@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('schedule_id')->constrained();
-            $table->foreignId('author_id')->constrained('user');
+            $table->foreignId('author_id')->constrained('users');
             $table->text('description');
             $table->timestamps();
         });
