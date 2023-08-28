@@ -18,7 +18,7 @@ class StudentSeeder extends Seeder
     {
         $sections = Section::all();
         $sections->each(function ($section) {
-            $students = User::factory()->student()->count(20)->create()->map(function ($student) use ($section) {
+            $students = User::factory()->student()->department($section->gradeLevel->department)->count(20)->create()->map(function ($student) use ($section) {
                 $enrolee = [];
                 $enrolee['transaction_id'] = $this->getId();
                 $enrolee['student_id'] = $student->id;
