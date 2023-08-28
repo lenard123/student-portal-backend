@@ -34,14 +34,17 @@ class StudentController extends Controller
 
     public function updateOtherInfo(Request $request)
     {
-        $user = $request->currentUser()->info;
-        $user->birthday = $request->birthday;
-        $user->civil_status = $request->civil_status;
-        $user->birthplace = $request->birthplace;
-        $user->religion = $request->religion;
-        $user->gender = $request->gender;
-        $user->nationality = $request->nationality;
-        $user->save();
-
+        try {
+            $user = $request->currentUser()->info;
+            $user->birthday = $request->birthday;
+            $user->civil_status = $request->civil_status;
+            $user->birthplace = $request->birthplace;
+            $user->religion = $request->religion;
+            $user->gender = $request->gender;
+            $user->nationality = $request->nationality;
+            $user->save();
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 }
