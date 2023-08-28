@@ -14,6 +14,7 @@ use App\Http\Controllers\API\SectionsController;
 use App\Http\Controllers\API\StudentController;
 use App\Http\Controllers\API\StudentRegistrationController;
 use App\Http\Controllers\API\SubjectController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -43,6 +44,9 @@ Route::post('/students/send-otp', [StudentRegistrationController::class, 'sendOt
 Route::post('/students/register', [StudentRegistrationController::class, 'register']);
 
 Route::middleware('auth:sanctum')->group(function () {
+
+    Route::patch('/user/avatar', [UserController::class, 'updateAvatar']);
+    Route::get('/users/{user}/thread', [MessageThreadController::class, 'findThread']);
 
     Route::get('/student/subjects', [StudentController::class, 'subjects']);
     Route::post('/enrollment', [StudentRegistrationController::class, 'enroll']);

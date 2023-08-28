@@ -37,9 +37,9 @@ class Student extends User
     {
         return $this->hasOne(Enrollee::class)
             ->where('status', Enrollee::STATUS_ENROLLED)
-            ->whereHas('academicYear', function( Builder $q) {
+            ->whereHas('academicYear', function (Builder $q) {
                 $q->where('status', AcademicYear::STATUS_STARTED)
-                  ->orWhere('status', AcademicYear::STATUS_ENROLLMENT);
+                    ->orWhere('status', AcademicYear::STATUS_ENROLLMENT);
             });
     }
 
@@ -48,5 +48,12 @@ class Student extends User
         static::addGlobalScope('student', function (Builder $builder) {
             $builder->where('role', self::ROLE_STUDENT);
         });
+    }
+
+    public function info()
+    {
+        return $this->hasOne(StudentInfo::class, 'id')->withDefault([
+            'student_id' => $this->created_at->format('Y') . str_pad($this->id, 4, '0', STR_PAD_LEFT)
+        ]);
     }
 }

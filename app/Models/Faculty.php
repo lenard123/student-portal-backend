@@ -31,4 +31,9 @@ class Faculty extends User
                 $q->where('academic_year_id', $academic_year_id);
             });
     }
+
+    protected static function newFactory()
+    {
+        return User::factory()->faculty();
+    }
 }

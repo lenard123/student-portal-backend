@@ -20,6 +20,7 @@ class UserFactory extends Factory
     {
         return [
             'firstname' => fake()->firstName(),
+            'middlename' => fake()->lastName(),
             'lastname' => fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
@@ -30,8 +31,20 @@ class UserFactory extends Factory
 
     public function role(string $role): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'role' => $role
+        ]);
+    }
+
+    public function faculty(): static
+    {
+        return $this->role(User::ROLE_FACULTY);
+    }
+
+    public function department(string $department): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'department' => $department
         ]);
     }
 

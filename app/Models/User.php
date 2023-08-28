@@ -67,7 +67,7 @@ class User extends Authenticatable
 
     public function getDepartmentLabelAttribute()
     {
-        return match($this->department) {
+        return match ($this->department) {
             null => '',
             self::DEPARTMENT_PRESCHOOL => 'Pre School',
             self::DEPARTMENT_ELEMENTARY => 'Elementary',
@@ -78,7 +78,16 @@ class User extends Authenticatable
 
     public function getAvatarAttribute()
     {
-        $name = strtolower(urlencode($this->fullname));
-        return "https://avatars.dicebear.com/api/initials/$name.svg";
+        if ($this->attributes['avatar'] == null) {
+            $name = strtolower(urlencode($this->fullname));
+            return "https://avatars.dicebear.com/api/initials/$name.svg";
+        }
+
+        return url('/storage/' . $this->attributes['avatar']);
+    }
+
+    public function toFaculty()
+    {
+        return new Faculty($this->attributes);
     }
 }

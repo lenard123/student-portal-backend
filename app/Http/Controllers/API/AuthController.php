@@ -18,7 +18,13 @@ class AuthController extends Controller
             abort(401, "You need to login first");
         }
 
-        return $auth->user();
+        $user = $auth->user();
+
+        if ($user->role == User::ROLE_STUDENT) {
+            $user->info;
+        }
+
+        return $user;
     }
 
     public function currentStudent()

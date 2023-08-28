@@ -12,6 +12,13 @@ class MessageThreadController extends Controller
     public function index(Request $request)
     {
         switch ($request->header('user-role')) {
+            case User::ROLE_FACULTY:
+            case User::ROLE_STUDENT:
+                return MessageThread::with('members')
+                    ->withCount('messages')
+                    ->whereHas('members', function ($query) use ($request) {
+                        $query->where('user_id', $request->currentUser()->id);
+                    })->get();
             case User::ROLE_ADMIN:
                 return MessageThread::with('members')
                     ->withCount('messages')
@@ -22,6 +29,11 @@ class MessageThreadController extends Controller
     public function messages(MessageThread $thread)
     {
         return $thread->messages;
+    }
+
+    public function findThread(Request $request, User $user)
+    {
+        return MessageThread::findThread($request->currentUser(), $user);
     }
 
     public function sendMessage(Request $request, MessageThread $thread)
