@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             SectionSeeder::class,
             FacultySeeder::class,
             ScheduleSeeder::class,
+            StudentSeeder::class,
         ]);
         // \App\Models\User::factory(10)->create();
 

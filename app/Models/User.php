@@ -83,6 +83,10 @@ class User extends Authenticatable
             return "https://avatars.dicebear.com/api/initials/$name.svg";
         }
 
+        if (str_starts_with($this->attributes['avatar'], 'http')) {
+            return $this->attributes['avatar'];
+        }
+
         return url('/storage/' . $this->attributes['avatar']);
     }
 
