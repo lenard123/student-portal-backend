@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,5 +17,34 @@ class StudentController extends Controller
             return [];
 
         return $user->currentRegistration->schedules->load('subject', 'faculty');
+    }
+
+    public function updateInfo(Request $request)
+    {
+        $this->validate($request, [
+            'firstname' => 'required',
+            'lastname' => 'required',
+        ]);
+        $user = $request->currentUser();
+        $user->firstname = $request->firstname;
+        $user->middlename = $request->middlename;
+        $user->lastname = $request->lastname;
+        $user->save();
+    }
+
+    public function updateOtherInfo(Request $request)
+    {
+        try {
+            $user = $request->currentUser()->info;
+            $user->birthday = $request->birthday;
+            $user->civil_status = $request->civil_status;
+            $user->birthplace = $request->birthplace;
+            $user->religion = $request->religion;
+            $user->gender = $request->gender;
+            $user->nationality = $request->nationality;
+            $user->save();
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 }

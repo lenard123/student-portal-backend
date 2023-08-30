@@ -53,6 +53,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/enrollment', [EnrolleeController::class, 'index']);
     Route::get('/enrollment/{enrollee}', [EnrolleeController::class, 'show']);
     Route::patch('/enrollment/{enrollee}/enroll', [EnrolleeController::class, 'enroll']);
+    Route::put('/student/info', [StudentController::class, 'updateInfo']);
+    Route::put('/student/other-info', [StudentController::class, 'updateOtherInfo']);
 
     Route::prefix('/announcements')->controller(AnnouncementController::class)->group(function () {
         Route::get('/', 'index');
