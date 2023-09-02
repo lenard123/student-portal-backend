@@ -29,6 +29,7 @@
         td {
             padding: 8px;
             border: 0;
+            width: 50%;
         }
     </style>
 </head>
@@ -52,20 +53,20 @@
                 <th colspan="2">Student General Information</th>
             </tr>
             <tr>
-                <td>Name: Lenard Mangay-ayam</td>
-                <td>Student Number: 20191012</td>
+                <td>Name: {{ $enrollee->student->fullname }}</td>
+                <td>Student Number: {{ $enrollee->student->info->student_id }}</td>
             </tr>
             <tr>
-                <td>Birthday: July 27, 2001</td>
-                <td>Birthplace: Quezon City</td>
+                <td>Birthday: {{ $enrollee->student->info->birthday }}</td>
+                <td>Birthplace: {{ $enrollee->student->info->birthplace }}</td>
             </tr>
             <tr>
                 <td>Civil Status: Single</td>
-                <td>Religion: Christian</td>
+                <td>Religion: {{ $enrollee->student->info->civil_status }}</td>
             </tr>
             <tr>
-                <td>Nationality: Filipino</td>
-                <td>Gender: Male</td>
+                <td>Nationality: {{ $enrollee->student->info->nationality }}</td>
+                <td>Gender: {{ $enrollee->student->info->gender }}</td>
             </tr>
         </table>
 
@@ -74,20 +75,24 @@
                 <th colspan="2">Pre-Enrollment Information</th>
             </tr>
             <tr>
+                <td>Transaction ID: </td>
+                <td>{{ $enrollee->transaction_id }}</td>
+            </tr>
+            <tr>
                 <td>School Year: </td>
-                <td>2023-2024</td>
+                <td>{{ $enrollee->academicYear->name }}</td>
             </tr>
             <tr>
                 <td>Department: </td>
-                <td>Elementary</td>
+                <td>{{ $enrollee->academicYear->department }}</td>
             </tr>
             <tr>
                 <td>Grade Level: </td>
-                <td>Grade 1</td>
+                <td>{{ $enrollee->gradeLevel->name }}</td>
             </tr>
             <tr>
                 <td>Date: </td>
-                <td>8/11/2023</td>
+                <td>{{ $enrollee->created_at?->format('Y/m/d') }}</td>
             </tr>
         </table>
 
@@ -95,22 +100,12 @@
             <tr>
                 <th colspan="2">Registration Fees</th>
             </tr>
+            @foreach ($enrollee->gradeLevel->fees as $fee)
             <tr>
-                <td>School Year: </td>
-                <td>2023-2024</td>
+                <td>{{$fee->fee}}: </td>
+                <td>{{$fee->amount}}</td>
             </tr>
-            <tr>
-                <td>Department: </td>
-                <td>Elementary</td>
-            </tr>
-            <tr>
-                <td>Grade Level: </td>
-                <td>Grade 1</td>
-            </tr>
-            <tr>
-                <td>Date: </td>
-                <td>8/11/2023</td>
-            </tr>
+            @endforeach
         </table>
     </main>
 </body>
