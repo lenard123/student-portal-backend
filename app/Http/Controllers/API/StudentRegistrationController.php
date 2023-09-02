@@ -51,10 +51,11 @@ class StudentRegistrationController extends Controller
 
     public function downloadRegistrationForm()
     {
-        return Pdf::loadView('pdf.registration-form')->stream();
+        return Pdf::loadView('pdf.registration-form')->download()->header('Content-Disposition', 'attachment; filename="registration-form.pdf"');
     }
 
     /**
+     * Student Side
      * Student must not have any pending enrollment
      * Student must not be enrolled
      * Department enrollment status must be started
@@ -93,6 +94,6 @@ class StudentRegistrationController extends Controller
             'academic_year_id' => AcademicYear::getActiveAcademicYear($user->department)->id,
             'grade_level_id' => $request->grade_level_id,
             'status' => Enrollee::STATUS_PENDING
-        ]);
+        ])->load('gradeLevel:id,name');
     }
 }

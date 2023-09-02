@@ -78,7 +78,7 @@ class User extends Authenticatable
 
     public function getAvatarAttribute()
     {
-        if ($this->attributes['avatar'] == null) {
+        if (!array_key_exists('avatar', $this->attributes) or $this->attributes['avatar'] == null) {
             $name = strtolower(urlencode($this->fullname));
             return "https://avatars.dicebear.com/api/initials/$name.svg";
         }

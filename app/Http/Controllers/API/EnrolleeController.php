@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AcademicYear;
 use App\Models\Enrollee;
 use App\Models\Section;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,12 +21,26 @@ class EnrolleeController extends Controller
         return $enrollee;
     }
 
+    public function findByTransactionId($transaction_id)
+    {
+        return Enrollee::where('transaction_id', $transaction_id)->firstOr(fn () => abort(400, 'Transaction Id does not exists'));
+    }
+
     public function index(Request $request)
     {
         return $request->currentUser()->registration->load('gradeLevel:id,name');
     }
 
+    public function downloadRegistrationForm(Enrollee $enrollee)
+    {
+        return Pdf::loadView('pdf.registration-form', [
+            'enrollee' => $enrollee
+        ])->stream();
+        return view();
+    }
+
     /**
+     * Admin Side
      * Registration status must be pending
      * Students must not be enrolled yet
      * Academic year status must be enrollment

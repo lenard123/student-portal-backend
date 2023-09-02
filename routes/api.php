@@ -51,8 +51,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/student/subjects', [StudentController::class, 'subjects']);
     Route::post('/enrollment', [StudentRegistrationController::class, 'enroll']);
     Route::get('/enrollment', [EnrolleeController::class, 'index']);
+    Route::get('/enrollment/transaction_id/{transaction_id}', [EnrolleeController::class, 'findByTransactionId']);
     Route::get('/enrollment/{enrollee}', [EnrolleeController::class, 'show']);
     Route::patch('/enrollment/{enrollee}/enroll', [EnrolleeController::class, 'enroll']);
+    Route::get('/enrollment/{enrollee}/download', [EnrolleeController::class, 'downloadRegistrationForm'])->withoutMiddleware('auth:sanctum');
     Route::put('/student/info', [StudentController::class, 'updateInfo']);
     Route::put('/student/other-info', [StudentController::class, 'updateOtherInfo']);
 
