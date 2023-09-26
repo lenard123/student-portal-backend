@@ -12,13 +12,14 @@ use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $students = Student::whereHas('currentRegistration', function ($query) {
+        $students = Student::whereHas('currentRegistration', function ($query) use ($request) {
             $query->where('status', Enrollee::STATUS_ENROLLED)
-                ->orWhereHas('academicYear', function ($subquery) {
-                    $subquery->whereIn('status', [AcademicYear::STATUS_STARTED, AcademicYear::STATUS_ENROLLMENT]);
-                });
+                  ->whereHas('academicYear', function ($subquery) use ($request) {
+                      $subquery->where('id', $request->academic_year_id)
+                              ->whereIn('status', [AcademicYear::STATUS_STARTED, AcademicYear::STATUS_ENROLLMENT]);
+                  });
         })->get();
     
         return $students;
