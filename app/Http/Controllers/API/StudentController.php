@@ -4,11 +4,27 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Student;
+use App\Models\Enrollee;
+use App\Models\AcademicYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
+    public function index(Request $request)
+    {
+        $students = Student::whereHas('currentRegistration', function ($query) use ($request) {
+            $query->where('status', Enrollee::STATUS_ENROLLED)
+                  ->whereHas('academicYear', function ($subquery) use ($request) {
+                      $subquery->where('id', $request->academic_year_id)
+                              ->whereIn('status', [AcademicYear::STATUS_STARTED, AcademicYear::STATUS_ENROLLMENT]);
+                  });
+        })->get();
+    
+        return $students;
+    }
+    
     public function subjects()
     {
         $user = Auth::guard('web:student')->user();

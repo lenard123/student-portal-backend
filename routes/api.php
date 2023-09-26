@@ -48,6 +48,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/user/avatar', [UserController::class, 'updateAvatar']);
     Route::get('/users/{user}/thread', [MessageThreadController::class, 'findThread']);
 
+    Route::get('/students', [StudentController::class, 'index']);
     Route::get('/student/subjects', [StudentController::class, 'subjects']);
     Route::post('/enrollment', [StudentRegistrationController::class, 'enroll']);
     Route::get('/enrollment', [EnrolleeController::class, 'index']);
