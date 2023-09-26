@@ -36,6 +36,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/login', 'login');
     Route::post('/logout', 'logout');
     Route::get('/user/{guard}', 'currentUser')->middleware('auth:sanctum');
+    Route::post('/forgot-password', 'forgotPassword');
     // Route::get('/student', 'currentStudent')->middleware('auth:sanctum');
     // Route::post('/student-logout', 'logoutStudent')->middleware('auth:sanctum');
 });

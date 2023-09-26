@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Mail\ForgotPasswordEmail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -64,4 +66,37 @@ class AuthController extends Controller
         Auth::guard('web:student')->logout();
         return response()->noContent();
     }
+    
+    private function generateUniquePassword()
+    {
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersNumber = strlen($characters);
+        $codeLength = 6;
+
+        $code = '';
+
+        while (strlen($code) < $codeLength) {
+            $position = rand(0, $charactersNumber - 1);
+            $character = $characters[$position];
+            $code = $code . $character;
+        }
+
+        return $code;
+    }
+    
+    public function forgotPassword(Request $request)
+    {
+        $this->validate($request, [
+            'email' => 'required|email|exists:users,email',
+            
+        ]);
+        
+        $password = $this->generateUniquePassword();
+        $message = new ForgotPasswordEmail($password);
+        Mail::to($request->email)->send($message);
+        
+        User::where('email', $request->email)
+        ->update(['password' => bcrypt($password)]);
+    }
+
 }
