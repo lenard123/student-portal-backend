@@ -42,6 +42,14 @@ class Student extends User
                     ->orWhere('status', AcademicYear::STATUS_ENROLLMENT);
             });
     }
+    
+    public function enrolledClasses()
+    {
+        return $this->hasMany(Enrollee::class)
+            ->where('status', Enrollee::STATUS_ENROLLED)
+            ->with('section')
+            ->with('gradeLevel');
+    }
 
     protected static function booted(): void
     {

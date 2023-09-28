@@ -25,6 +25,11 @@ class StudentController extends Controller
         return $students;
     }
     
+    public function show($id) 
+    {    
+        return Student::with('enrolledClasses')->where('id', $id)->get();
+    }
+    
     public function subjects()
     {
         $user = Auth::guard('web:student')->user();
