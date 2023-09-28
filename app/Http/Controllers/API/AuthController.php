@@ -43,12 +43,19 @@ class AuthController extends Controller
         ]);
 
         $auth = Auth::guard("web:$request->role");
+
         $credentials = $request->only('email', 'password', 'role');
         if (!$auth->attempt($credentials)) {
             abort(422, "Sorry, wrong email or password.");
         }
 
-        return $auth->user();
+        $user = $auth->user();
+
+        if ($request->role == User::ROLE_STUDENT) {
+            $user->info;
+        }
+
+        return $user;
     }
 
     public function logout(Request $request)
@@ -66,7 +73,7 @@ class AuthController extends Controller
         Auth::guard('web:student')->logout();
         return response()->noContent();
     }
-    
+
     private function generateUniquePassword()
     {
         $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -83,20 +90,19 @@ class AuthController extends Controller
 
         return $code;
     }
-    
+
     public function forgotPassword(Request $request)
     {
         $this->validate($request, [
             'email' => 'required|email|exists:users,email',
-            
+
         ]);
-        
+
         $password = $this->generateUniquePassword();
         $message = new ForgotPasswordEmail($password);
         Mail::to($request->email)->send($message);
-        
-        User::where('email', $request->email)
-        ->update(['password' => bcrypt($password)]);
-    }
 
+        User::where('email', $request->email)
+            ->update(['password' => bcrypt($password)]);
+    }
 }
