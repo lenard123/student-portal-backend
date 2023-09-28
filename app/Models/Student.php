@@ -17,6 +17,7 @@ class Student extends User
     ];
 
     protected $with = ['currentRegistration'];
+    protected $appends = ['student_id', 'fullname', 'avatar', 'department_label'];
 
     public function hasPendingRegistration()
     {
@@ -42,11 +43,12 @@ class Student extends User
                     ->orWhere('status', AcademicYear::STATUS_ENROLLMENT);
             });
     }
-    
+
     public function enrolledClasses()
     {
         return $this->hasMany(Enrollee::class)
             ->where('status', Enrollee::STATUS_ENROLLED)
+            ->with('academicYear')
             ->with('section')
             ->with('gradeLevel');
     }
@@ -58,10 +60,13 @@ class Student extends User
         });
     }
 
+    public function getStudentIdAttribute()
+    {
+        return $this->created_at->format('Y') . str_pad($this->id, 4, '0', STR_PAD_LEFT);
+    }
+
     public function info()
     {
-        return $this->hasOne(StudentInfo::class, 'id')->withDefault([
-            'student_id' => $this->created_at->format('Y') . str_pad($this->id, 4, '0', STR_PAD_LEFT)
-        ]);
+        return $this->hasOne(StudentInfo::class, 'id')->withDefault();
     }
 }

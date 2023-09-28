@@ -16,20 +16,20 @@ class StudentController extends Controller
     {
         $students = Student::whereHas('currentRegistration', function ($query) use ($request) {
             $query->where('status', Enrollee::STATUS_ENROLLED)
-                  ->whereHas('academicYear', function ($subquery) use ($request) {
-                      $subquery->where('id', $request->academic_year_id)
-                              ->whereIn('status', [AcademicYear::STATUS_STARTED, AcademicYear::STATUS_ENROLLMENT]);
-                  });
-        })->get();
-    
+                ->whereHas('academicYear', function ($subquery) use ($request) {
+                    $subquery->where('id', $request->academic_year_id)
+                        ->whereIn('status', [AcademicYear::STATUS_STARTED, AcademicYear::STATUS_ENROLLMENT]);
+                });
+        })->with('currentRegistration.gradeLevel', 'currentRegistration.section')->get();
+
         return $students;
     }
-    
-    public function show($id) 
-    {    
-        return Student::with('enrolledClasses')->where('id', $id)->get();
+
+    public function show($id)
+    {
+        return Student::with('enrolledClasses')->where('id', $id)->first()->load('info');
     }
-    
+
     public function subjects()
     {
         $user = Auth::guard('web:student')->user();
@@ -57,6 +57,7 @@ class StudentController extends Controller
     {
         try {
             $user = $request->currentUser()->info;
+            $user->student_id = $request->currentUser()->student_id;
             $user->birthday = $request->birthday;
             $user->civil_status = $request->civil_status;
             $user->birthplace = $request->birthplace;
